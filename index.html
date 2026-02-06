@@ -5,21 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Will You Be My Valentine?</title>
   <style>
+    /* ========================================
+       PIXEL ART VALENTINE'S DAY CARD
+       A retro-styled interactive card with:
+       - Pixel art graphics (CSS-based)
+       - Animated backgrounds and effects
+       - Three-stage user experience
+       ======================================== */
+    /* ========================================
+       FONTS - Retro pixel font
+       ======================================== */
     @font-face {
       font-family: 'Pixel';
       src: url('https://fonts.gstatic.com/s/pressstart2p/v15/e3t4euO8T-267oIAQAu6jDQyK3nVivM.woff2') format('woff2');
     }
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
+    /* ========================================
+       BASE STYLES
+       ======================================== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    /* Full height for proper ground rendering */
     html, body {
       height: 100%;
     }
 
     body {
-      min-height: 100vh;
-      min-height: 100svh;
+      min-height: 100vh;   /* Fallback for older browsers */
+      min-height: 100svh;  /* iOS Safari fix - accounts for dynamic UI bars */
       background-color: #f5e6f0;
       display: flex;
       flex-direction: column;
@@ -27,10 +41,14 @@
       justify-content: center;
       overflow: hidden;
       font-family: 'Press Start 2P', monospace;
-      image-rendering: pixelated;
+      image-rendering: pixelated;  /* Keeps pixel art crisp */
     }
 
-    /* Pixel grid overlay */
+    /* ========================================
+       BACKGROUND EFFECTS
+       ======================================== */
+    
+    /* Subtle pixel grid overlay for retro feel */
     body::before {
       content: '';
       position: fixed;
@@ -44,7 +62,7 @@
       z-index: 1000;
     }
 
-    /* Pastel sky background with pixel clouds */
+    /* Pastel gradient sky background */
     .sky-bg {
       position: fixed;
       top: 0; left: 0;
@@ -53,7 +71,9 @@
       z-index: 0;
     }
 
-    /* Pixel clouds */
+    /* ========================================
+       PIXEL CLOUDS - Drifting across sky
+       ======================================== */
     .cloud {
       position: fixed;
       z-index: 1;
@@ -79,7 +99,9 @@
       100% { transform: translateX(calc(100vw + 200px)); }
     }
 
-    /* Pixel stars twinkling */
+    /* ========================================
+       PIXEL STARS - Twinkling effect
+       ======================================== */
     .pixel-star {
       position: fixed;
       z-index: 1;
@@ -102,7 +124,9 @@
       100% { opacity: 1; transform: scale(1.2); }
     }
 
-    /* Floating pixel hearts */
+    /* ========================================
+       FLOATING HEARTS - Interactive background
+       ======================================== */
     .hearts-bg {
       position: fixed;
       top: 0; left: 0;
@@ -141,7 +165,7 @@
       }
     }
 
-    /* Heart pop animation */
+    /* Heart pop animation when clicked */
     .heart-pop {
       animation: heartPop 0.3s steps(4) forwards !important;
       pointer-events: none !important;
@@ -154,7 +178,7 @@
       100% { transform: scale(0); opacity: 0; }
     }
 
-    /* Pop particle */
+    /* Burst particles when heart is clicked */
     .pop-particle {
       position: fixed;
       pointer-events: none;
@@ -179,7 +203,9 @@
     }
 
 
-    /* Pixel ground */
+    /* ========================================
+       GROUND - Grass and dirt layers
+       ======================================== */
     .ground {
       position: fixed;
       bottom: 0;
@@ -207,7 +233,7 @@
       background: repeating-linear-gradient(90deg, #d4a76a 0px, #d4a76a 8px, #c89b60 8px, #c89b60 16px);
     }
 
-    /* Pixel flowers on ground */
+    /* Decorative pixel flowers */
     .flowers {
       position: fixed;
       bottom: 104px;
@@ -229,7 +255,9 @@
       100% { transform: rotate(3deg); }
     }
 
-    /* Main card - pixel style */
+    /* ========================================
+       MAIN CARD - Stage 2 (Question)
+       ======================================== */
     .card {
       position: relative;
       z-index: 10;
@@ -256,7 +284,7 @@
       }
     }
 
-    /* Pixel egg using CSS */
+    /* Pixel art fried egg decoration */
     .pixel-egg {
       display: inline-block;
       animation: eggWobble 2s ease-in-out infinite;
@@ -280,7 +308,7 @@
       height: 8px;
     }
 
-    /* Keep heart grid for yes screen */
+    /* Pixel heart for yes screen */
     .pixel-heart {
       display: inline-block;
       animation: heartbeat 1s steps(2) infinite;
@@ -298,12 +326,13 @@
       height: 8px;
     }
 
+    /* Pixel color classes for heart */
     .px-r { background: #ff8fab; }
     .px-r2 { background: #ff6b8a; }
     .px-w { background: rgba(255,255,255,0.6); }
     .px-t { background: transparent; }
 
-    /* Egg pixel colors */
+    /* Pixel color classes for egg */
     .px-eg { background: #fff5e6; }
     .px-eg2 { background: #ffe8cc; }
     .px-yk { background: #ffd166; }
@@ -401,7 +430,9 @@
       position: relative;
     }
 
-    /* Yes screen */
+    /* ========================================
+       YES SCREEN - Stage 3 (Celebration)
+       ======================================== */
     .yes-screen {
       display: none;
       position: relative;
@@ -454,7 +485,9 @@
       margin: 0 auto;
     }
 
-    /* Pixel sparkle particles */
+    /* ========================================
+       SPARKLE EFFECTS
+       ======================================== */
     .sparkle {
       position: fixed;
       pointer-events: none;
@@ -483,7 +516,9 @@
       100% { transform: scale(3); opacity: 0; }
     }
 
-    /* Pixel confetti blocks */
+    /* ========================================
+       CONFETTI - Falling celebration blocks
+       ======================================== */
     .confetti {
       position: fixed;
       top: -16px;
@@ -508,7 +543,7 @@
       }
     }
 
-    /* Letter reveal - pixel bounce */
+    /* Letter-by-letter reveal animation */
     .letter {
       display: inline-block;
       opacity: 0;
@@ -529,7 +564,9 @@
       }
     }
 
-    /* Envelope intro - pixel style */
+    /* ========================================
+       ENVELOPE SCREEN - Stage 1 (Initial)
+       ======================================== */
     .envelope-screen {
       position: relative;
       z-index: 10;
@@ -610,7 +647,9 @@
       100% { transform: translateY(8px); }
     }
 
-    /* Mobile responsive fixes */
+    /* ========================================
+       MOBILE RESPONSIVE STYLES
+       ======================================== */
     @media (max-width: 768px) {
       .envelope-screen {
         width: 85%;
@@ -725,14 +764,21 @@
   </div>
 
   <script>
-    // --- Pastel colors palette ---
+    /* ========================================
+       JAVASCRIPT - Interactive Features
+       ======================================== */
+
+    // --- Pastel colors palette for hearts and confetti ---
     const pastelColors = [
       '#ffb3c6', '#ffc8dd', '#ffafcc', '#bde0fe',
       '#a2d2ff', '#cdb4db', '#ffd6e8', '#c8b6ff',
       '#e4c1f9', '#f2b5d4', '#d0f4de', '#fcf6bd'
     ];
 
-    // --- Pixel heart drawing on canvas ---
+    // ========================================
+    // PIXEL HEART CANVAS DRAWING
+    // Creates hearts using HTML5 Canvas API
+    // ========================================
     const heartPattern = [
       [0,1,1,0,0,0,1,1,0],
       [1,2,1,1,0,1,1,1,1],
@@ -766,7 +812,10 @@
       return canvas;
     }
 
-    // --- Floating pixel hearts ---
+    // ========================================
+    // FLOATING HEARTS BACKGROUND
+    // Spawns clickable hearts that float upward
+    // ========================================
     const heartsBg = document.getElementById('heartsBg');
     const heartColors = [
       ['#ffb3c6','#ff8fab'],
@@ -835,7 +884,10 @@
     setInterval(spawnHeart, 500);
     for (let i = 0; i < 12; i++) setTimeout(spawnHeart, i * 250);
 
-    // --- Pixel clouds ---
+    // ========================================
+    // PIXEL CLOUDS
+    // Creates drifting cloud animations
+    // ========================================
     function createCloud(top, speed) {
       const cloud = document.createElement('div');
       cloud.classList.add('cloud');
@@ -877,7 +929,10 @@
     createCloud(80, 55);
     createCloud(50, 38);
 
-    // --- Pixel stars ---
+    // ========================================
+    // PIXEL STARS
+    // Twinkling star decorations
+    // ========================================
     for (let i = 0; i < 20; i++) {
       const star = document.createElement('div');
       star.classList.add('pixel-star', 'twinkle');
@@ -893,7 +948,10 @@
       document.body.appendChild(star);
     }
 
-    // --- Pixel flowers on ground ---
+    // ========================================
+    // PIXEL FLOWERS
+    // Generate flowers on the ground
+    // ========================================
     const flowersEl = document.getElementById('flowers');
     const flowerPatterns = [
       { petals: '#ffb3c6', center: '#fcf6bd' },
@@ -949,7 +1007,10 @@
       flowersEl.appendChild(flower);
     }
 
-    // --- Envelope open ---
+    // ========================================
+    // ENVELOPE OPENING TRANSITION
+    // Stage 1 -> Stage 2
+    // ========================================
     function openEnvelope() {
       const env = document.getElementById('envelopeScreen');
       env.style.transition = 'all 0.4s steps(6)';
@@ -961,7 +1022,10 @@
       }, 400);
     }
 
-    // --- No button runs away ---
+    // ========================================
+    // "NO" BUTTON BEHAVIOR
+    // Button shrinks and moves away on hover
+    // ========================================
     let noShrink = 1;
     const noPhrases = ["No", "Really?", "Sure? :(", "Pls...", ":(((", "...", ""];
     let noIndex = 0;
@@ -997,7 +1061,10 @@
       }
     }
 
-    // --- Yes! ---
+    // ========================================
+    // "YES" BUTTON HANDLER
+    // Triggers celebration screen
+    // ========================================
     function sayYes() {
       for (let i = 0; i < 30; i++) {
         setTimeout(() => createPixelSparkle(), i * 60);
@@ -1023,7 +1090,10 @@
       }, 500);
     }
 
-    // --- Letter-by-letter ---
+    // ========================================
+    // TEXT ANIMATION
+    // Letter-by-letter reveal effect
+    // ========================================
     function animateLoveText(text) {
       const container = document.getElementById('loveText');
       container.innerHTML = '';
@@ -1061,7 +1131,10 @@
       });
     }
 
-    // --- Pixel sparkle particles ---
+    // ========================================
+    // SPARKLE PARTICLES
+    // Creates sparkle effects on "Yes" click
+    // ========================================
     function createPixelSparkle() {
       const sparkle = document.createElement('div');
       sparkle.classList.add('sparkle');
@@ -1092,7 +1165,10 @@
       setTimeout(() => sparkle.remove(), 800);
     }
 
-    // --- Pixel confetti blocks ---
+    // ========================================
+    // CONFETTI SYSTEM
+    // Launches and maintains falling confetti
+    // ========================================
     function launchPixelConfetti() {
       for (let i = 0; i < 80; i++) {
         setTimeout(() => {
