@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Will You Be My Valentine?</title>
+  <style>
+    @font-face {
+      font-family: 'Pixel';
+      src: url('https://fonts.gstatic.com/s/pressstart2p/v15/e3t4euO8T-267oIAQAu6jDQyK3nVivM.woff2') format('woff2');
+    }
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background-color: #f5e6f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-family: 'Press Start 2P', monospace;
+      image-rendering: pixelated;
+    }
+
+    /* Pixel grid overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image:
+        linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+      background-size: 8px 8px;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* Pastel sky background with pixel clouds */
+    .sky-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(180deg, #e8d5f5 0%, #fce4ec 30%, #ffd6e8 60%, #fff0f5 100%);
+      z-index: 0;
+    }
+
+    /* Pixel clouds */
+    .cloud {
+      position: fixed;
+      z-index: 1;
+      opacity: 0.6;
+      animation: cloudDrift linear infinite;
+    }
+
+    .cloud-shape {
+      display: grid;
+      grid-template-columns: repeat(var(--cols), 8px);
+      gap: 0;
+    }
+
+    .cloud-shape .px {
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 0;
+    }
+
+    @keyframes cloudDrift {
+      0% { transform: translateX(-200px); }
+      100% { transform: translateX(calc(100vw + 200px)); }
+    }
+
+    /* Pixel stars twinkling */
+    .pixel-star {
+      position: fixed;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .pixel-star .px {
+      width: 4px;
+      height: 4px;
+      background: #ffccdd;
+      box-shadow: 0 0 4px #ffaacc;
+    }
+
+    .pixel-star.twinkle {
+      animation: twinkle 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.3; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Floating pixel hearts */
+    .hearts-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 2;
+    }
+
+    .pixel-heart-float {
+      position: absolute;
+      bottom: -40px;
+      animation: floatUp linear infinite;
+      opacity: 0.7;
+      cursor: pointer;
+      transition: filter 0.1s;
+    }
+
+    .pixel-heart-float:hover {
+      filter: brightness(1.3);
+      opacity: 1 !important;
+    }
+
+    .pixel-heart-float canvas {
+      image-rendering: pixelated;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.7;
+      }
+      50% { opacity: 0.9; }
+      100% {
+        transform: translateY(-110vh) scale(0.6);
+        opacity: 0;
+      }
+    }
+
+    /* Heart pop animation */
+    .heart-pop {
+      animation: heartPop 0.3s steps(4) forwards !important;
+      pointer-events: none !important;
+      filter: none !important;
+    }
+
+    @keyframes heartPop {
+      0% { transform: scale(1); opacity: 0.9; }
+      40% { transform: scale(1.5); opacity: 0.9; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    /* Pop particle */
+    .pop-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 200;
+      animation: particleBurst 0.6s steps(6) forwards;
+    }
+
+    .pop-particle .px {
+      width: 6px;
+      height: 6px;
+    }
+
+    @keyframes particleBurst {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--dx), var(--dy)) scale(0.3);
+        opacity: 0;
+      }
+    }
+
+
+    /* Pixel ground */
+    .ground {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      z-index: 3;
+      overflow: hidden;
+    }
+
+    .ground-row {
+      display: flex;
+      width: 200%;
+    }
+
+    .ground .grass {
+      width: 100%;
+      height: 16px;
+      background: repeating-linear-gradient(90deg, #b8e6b8 0px, #b8e6b8 8px, #a8d8a8 8px, #a8d8a8 16px);
+    }
+
+    .ground .dirt {
+      width: 100%;
+      height: 64px;
+      background: repeating-linear-gradient(90deg, #d4a76a 0px, #d4a76a 8px, #c89b60 8px, #c89b60 16px);
+    }
+
+    /* Pixel flowers on ground */
+    .flowers {
+      position: fixed;
+      bottom: 64px;
+      left: 0;
+      width: 100%;
+      height: 32px;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .pixel-flower {
+      position: absolute;
+      bottom: 0;
+      animation: flowerSway 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes flowerSway {
+      0% { transform: rotate(-3deg); }
+      100% { transform: rotate(3deg); }
+    }
+
+    /* Main card - pixel style */
+    .card {
+      position: relative;
+      z-index: 10;
+      background: #fff5f9;
+      border: 4px solid #f0a0c0;
+      box-shadow:
+        8px 8px 0 #e090b0,
+        inset 0 0 0 4px #fff;
+      padding: 40px 32px;
+      text-align: center;
+      max-width: 520px;
+      width: 90%;
+      animation: cardEntrance 0.6s steps(8) both;
+    }
+
+    @keyframes cardEntrance {
+      0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Pixel egg using CSS */
+    .pixel-egg {
+      display: inline-block;
+      animation: eggWobble 2s ease-in-out infinite;
+      margin-bottom: 8px;
+    }
+
+    @keyframes eggWobble {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-3deg) scale(1.03); }
+      75% { transform: rotate(3deg) scale(1.03); }
+    }
+
+    .egg-grid {
+      display: grid;
+      grid-template-columns: repeat(11, 8px);
+      gap: 0;
+    }
+
+    .egg-grid .px {
+      width: 8px;
+      height: 8px;
+    }
+
+    /* Keep heart grid for yes screen */
+    .pixel-heart {
+      display: inline-block;
+      animation: heartbeat 1s steps(2) infinite;
+      margin-bottom: 8px;
+    }
+
+    .heart-grid {
+      display: grid;
+      grid-template-columns: repeat(9, 8px);
+      gap: 0;
+    }
+
+    .heart-grid .px {
+      width: 8px;
+      height: 8px;
+    }
+
+    .px-r { background: #ff8fab; }
+    .px-r2 { background: #ff6b8a; }
+    .px-w { background: rgba(255,255,255,0.6); }
+    .px-t { background: transparent; }
+
+    /* Egg pixel colors */
+    .px-eg { background: #fff5e6; }
+    .px-eg2 { background: #ffe8cc; }
+    .px-yk { background: #ffd166; }
+    .px-yk2 { background: #ffe8a0; }
+    .px-ykd { background: #f5b840; }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1.1rem;
+      color: #d4739a;
+      margin: 20px 0 12px;
+      animation: fadeSlideIn 0.5s steps(6) 0.3s both;
+      line-height: 1.8;
+      text-shadow: 2px 2px 0 #f5c6d8;
+    }
+
+    .subtitle {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.55rem;
+      color: #c88aa8;
+      margin-bottom: 24px;
+      animation: fadeSlideIn 0.5s steps(6) 0.5s both;
+      line-height: 2.2;
+    }
+
+    @keyframes fadeSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .question {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.8rem;
+      color: #c06088;
+      margin-bottom: 28px;
+      animation: fadeSlideIn 0.5s steps(6) 0.7s both;
+      line-height: 2;
+      text-shadow: 1px 1px 0 #f5c6d8;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      animation: fadeSlideIn 0.5s steps(6) 0.9s both;
+    }
+
+    .btn-yes {
+      background: #ffb3c6;
+      color: #8b3a62;
+      border: 3px solid #e890a8;
+      padding: 12px 32px;
+      font-size: 0.8rem;
+      font-family: 'Press Start 2P', monospace;
+      cursor: pointer;
+      transition: all 0.1s steps(2);
+      box-shadow: 4px 4px 0 #d080a0;
+      position: relative;
+    }
+
+    .btn-yes:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 #d080a0;
+      background: #ffc8d8;
+    }
+
+    .btn-yes:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 #d080a0;
+    }
+
+    .btn-no {
+      background: #e8dde4;
+      color: #a898a2;
+      border: 3px solid #d0c4cc;
+      padding: 10px 24px;
+      font-size: 0.65rem;
+      font-family: 'Press Start 2P', monospace;
+      cursor: pointer;
+      transition: all 0.1s steps(2);
+      box-shadow: 4px 4px 0 #c0b4bc;
+      position: relative;
+    }
+
+    /* Yes screen */
+    .yes-screen {
+      display: none;
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      animation: cardEntrance 0.6s steps(8);
+    }
+
+    .yes-screen .mega-heart {
+      display: inline-block;
+      animation: heartbeat 0.8s steps(2) infinite, spinIn 0.6s steps(8);
+    }
+
+    .mega-heart .heart-grid {
+      grid-template-columns: repeat(9, 12px);
+    }
+    .mega-heart .heart-grid .px {
+      width: 12px;
+      height: 12px;
+    }
+
+    @keyframes spinIn {
+      0% {
+        transform: scale(0) rotate(-90deg);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    .yes-screen .love-text {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1.2rem;
+      color: white;
+      text-shadow: 3px 3px 0 #c06088, -1px -1px 0 #ffb3c6;
+      margin: 24px 0;
+      animation: fadeSlideIn 0.5s steps(6) 0.3s both;
+      line-height: 2;
+    }
+
+    .yes-screen .love-sub {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.55rem;
+      color: white;
+      text-shadow: 2px 2px 0 #c06088;
+      line-height: 2.2;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* Pixel sparkle particles */
+    .sparkle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 100;
+      animation: sparkleFade 0.8s steps(4) forwards;
+    }
+
+    .sparkle-shape {
+      display: grid;
+      grid-template-columns: repeat(3, 4px);
+      gap: 0;
+    }
+
+    .sparkle-shape .px {
+      width: 4px;
+      height: 4px;
+    }
+
+    .sp-y { background: #ffe4a0; }
+    .sp-w { background: white; }
+    .sp-t { background: transparent; }
+
+    @keyframes sparkleFade {
+      0% { transform: scale(0); opacity: 1; }
+      50% { transform: scale(2); opacity: 1; }
+      100% { transform: scale(3); opacity: 0; }
+    }
+
+    /* Pixel confetti blocks */
+    .confetti {
+      position: fixed;
+      top: -16px;
+      z-index: 50;
+      pointer-events: none;
+      animation: confettiFall linear forwards;
+    }
+
+    .confetti-block {
+      width: 8px;
+      height: 8px;
+    }
+
+    @keyframes confettiFall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* Letter reveal - pixel bounce */
+    .letter {
+      display: inline-block;
+      opacity: 0;
+      animation: letterPop 0.3s steps(4) forwards;
+    }
+
+    @keyframes letterPop {
+      0% {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      50% {
+        transform: translateY(-4px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Envelope intro - pixel style */
+    .envelope-screen {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      cursor: pointer;
+      animation: cardEntrance 0.6s steps(8);
+    }
+
+    .envelope-pixel {
+      display: inline-block;
+      animation: envelopeBounce 1.5s steps(8) infinite;
+    }
+
+    .envelope-grid {
+      display: grid;
+      grid-template-columns: repeat(11, 8px);
+      gap: 0;
+    }
+
+    .envelope-grid .px {
+      width: 8px;
+      height: 8px;
+    }
+
+    .px-env { background: #ffd6e8; }
+    .px-env2 { background: #ffb3c6; }
+    .px-env3 { background: #ff8fab; }
+    .px-seal { background: #ff6b8a; }
+
+    @keyframes envelopeBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .envelope-pixel:hover {
+      filter: brightness(1.1);
+    }
+
+    .tap-text {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.7rem;
+      color: #d4739a;
+      margin-top: 24px;
+      animation: blink 1s steps(2) infinite;
+      text-shadow: 1px 1px 0 #f5c6d8;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .hidden { display: none !important; }
+
+    /* Pixel art tooltip arrow under tap text */
+    .tap-arrow {
+      margin-top: 12px;
+      animation: arrowBob 0.8s steps(4) infinite alternate;
+      display: inline-block;
+    }
+
+    .arrow-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 6px);
+    }
+    .arrow-grid .px {
+      width: 6px;
+      height: 6px;
+    }
+    .px-arr { background: #d4739a; }
+
+    @keyframes arrowBob {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(8px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sky-bg"></div>
+
+  <!-- Floating pixel hearts background -->
+  <div class="hearts-bg" id="heartsBg"></div>
+
+  <!-- Pixel ground -->
+  <div class="ground">
+    <div class="grass"></div>
+    <div class="dirt"></div>
+  </div>
+  <div class="flowers" id="flowers"></div>
+
+  <!-- Stage 1: Pixel Envelope -->
+  <div class="envelope-screen" id="envelopeScreen" onclick="openEnvelope()">
+    <div class="envelope-pixel">
+      <!-- Pixel art envelope -->
+      <div class="envelope-grid">
+        <div class="px px-env3"></div><div class="px px-env2"></div><div class="px px-env2"></div><div class="px px-env2"></div><div class="px px-env2"></div><div class="px px-env2"></div><div class="px px-env2"></div><div class="px px-env2"></div><div class="px px-env2"></div><div class="px px-env2"></div><div class="px px-env3"></div>
+        <div class="px px-env2"></div><div class="px px-env3"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env3"></div><div class="px px-env2"></div>
+        <div class="px px-env2"></div><div class="px px-env"></div><div class="px px-env3"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env3"></div><div class="px px-env"></div><div class="px px-env2"></div>
+        <div class="px px-env2"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env3"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env3"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env2"></div>
+        <div class="px px-env2"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env3"></div><div class="px px-seal"></div><div class="px px-env3"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env2"></div>
+        <div class="px px-env2"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env3"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env3"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env2"></div>
+        <div class="px px-env2"></div><div class="px px-env"></div><div class="px px-env3"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env"></div><div class="px px-env3"></div><div class="px px-env"></div><div class="px px-env2"></div>
+        <div class="px px-env3"></div><div class="px px-env2"></div><div class="px px-env2"></div><div class="px px-env2"></div><div class="px px-env2"></div><div class="px px-env2"></div><div class="px px-env2"></div><div class="px px-env2"></div><div class="px px-env2"></div><div class="px px-env2"></div><div class="px px-env3"></div>
+      </div>
+    </div>
+    <p class="tap-text">Click to open...</p>
+    <div class="tap-arrow">
+      <div class="arrow-grid">
+        <div class="px px-t"></div><div class="px px-t"></div><div class="px px-arr"></div><div class="px px-t"></div><div class="px px-t"></div>
+        <div class="px px-t"></div><div class="px px-arr"></div><div class="px px-arr"></div><div class="px px-arr"></div><div class="px px-t"></div>
+        <div class="px px-arr"></div><div class="px px-arr"></div><div class="px px-arr"></div><div class="px px-arr"></div><div class="px px-arr"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 2: The question -->
+  <div class="card hidden" id="card">
+    <div class="pixel-egg">
+      <!-- 11x9 pixel fried egg -->
+      <div class="egg-grid">
+        <div class="px px-t"></div><div class="px px-t"></div><div class="px px-t"></div><div class="px px-eg2"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg2"></div><div class="px px-t"></div><div class="px px-t"></div><div class="px px-t"></div>
+        <div class="px px-t"></div><div class="px px-t"></div><div class="px px-eg2"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg2"></div><div class="px px-t"></div><div class="px px-t"></div>
+        <div class="px px-t"></div><div class="px px-eg2"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg2"></div><div class="px px-t"></div>
+        <div class="px px-eg2"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-yk"></div><div class="px px-yk"></div><div class="px px-yk"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg2"></div>
+        <div class="px px-eg2"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-yk"></div><div class="px px-yk"></div><div class="px px-yk2"></div><div class="px px-yk"></div><div class="px px-yk"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg2"></div>
+        <div class="px px-eg2"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-yk"></div><div class="px px-yk2"></div><div class="px px-yk2"></div><div class="px px-yk"></div><div class="px px-yk"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg2"></div>
+        <div class="px px-eg2"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-yk"></div><div class="px px-yk"></div><div class="px px-ykd"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg2"></div>
+        <div class="px px-t"></div><div class="px px-eg2"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg2"></div><div class="px px-t"></div>
+        <div class="px px-t"></div><div class="px px-t"></div><div class="px px-eg2"></div><div class="px px-eg2"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg"></div><div class="px px-eg2"></div><div class="px px-eg2"></div><div class="px px-t"></div><div class="px px-t"></div>
+      </div>
+    </div>
+    <h1 class="title">You're eggstra special</h1>
+    <p class="subtitle">I can't wait for our Vegas trip together.</p>
+    <h2 class="question">Will you be my Valentine?</h2>
+    <div class="buttons">
+      <button class="btn-yes" onclick="sayYes()">Yes!</button>
+      <button class="btn-no" id="noBtn" onmouseover="runAway()" onclick="runAway()">No</button>
+    </div>
+  </div>
+
+  <!-- Stage 3: She said yes -->
+  <div class="yes-screen hidden" id="yesScreen">
+    <div class="mega-heart">
+      <div class="heart-grid">
+        <div class="px px-t"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-t"></div><div class="px px-t"></div><div class="px px-t"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-t"></div>
+        <div class="px px-r"></div><div class="px px-w"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-t"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div>
+        <div class="px px-r"></div><div class="px px-w"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div>
+        <div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div>
+        <div class="px px-t"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-t"></div>
+        <div class="px px-t"></div><div class="px px-t"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-t"></div><div class="px px-t"></div>
+        <div class="px px-t"></div><div class="px px-t"></div><div class="px px-t"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-r"></div><div class="px px-t"></div><div class="px px-t"></div><div class="px px-t"></div>
+        <div class="px px-t"></div><div class="px px-t"></div><div class="px px-t"></div><div class="px px-t"></div><div class="px px-r2"></div><div class="px px-t"></div><div class="px px-t"></div><div class="px px-t"></div><div class="px px-t"></div>
+      </div>
+    </div>
+    <div class="love-text" id="loveText"></div>
+    <div class="love-sub" id="loveSub"></div>
+  </div>
+
+  <script>
+    // --- Pastel colors palette ---
+    const pastelColors = [
+      '#ffb3c6', '#ffc8dd', '#ffafcc', '#bde0fe',
+      '#a2d2ff', '#cdb4db', '#ffd6e8', '#c8b6ff',
+      '#e4c1f9', '#f2b5d4', '#d0f4de', '#fcf6bd'
+    ];
+
+    // --- Pixel heart drawing on canvas ---
+    const heartPattern = [
+      [0,1,1,0,0,0,1,1,0],
+      [1,2,1,1,0,1,1,1,1],
+      [1,2,1,1,1,1,1,1,1],
+      [1,1,1,1,1,1,1,1,1],
+      [0,1,1,1,1,1,1,1,0],
+      [0,0,1,1,1,1,1,0,0],
+      [0,0,0,1,1,1,0,0,0],
+      [0,0,0,0,1,0,0,0,0],
+    ];
+
+    function createPixelHeartCanvas(size, color1, color2, highlight) {
+      const canvas = document.createElement('canvas');
+      const px = size;
+      canvas.width = 9 * px;
+      canvas.height = 8 * px;
+      canvas.style.imageRendering = 'pixelated';
+      const ctx = canvas.getContext('2d');
+
+      for (let y = 0; y < heartPattern.length; y++) {
+        for (let x = 0; x < heartPattern[y].length; x++) {
+          if (heartPattern[y][x] === 1) {
+            ctx.fillStyle = color1;
+            ctx.fillRect(x * px, y * px, px, px);
+          } else if (heartPattern[y][x] === 2) {
+            ctx.fillStyle = highlight || 'rgba(255,255,255,0.5)';
+            ctx.fillRect(x * px, y * px, px, px);
+          }
+        }
+      }
+      return canvas;
+    }
+
+    // --- Floating pixel hearts ---
+    const heartsBg = document.getElementById('heartsBg');
+    const heartColors = [
+      ['#ffb3c6','#ff8fab'],
+      ['#cdb4db','#b392c4'],
+      ['#ffc8dd','#ffafcc'],
+      ['#bde0fe','#a2d2ff'],
+      ['#c8b6ff','#b8a4ef'],
+      ['#f2b5d4','#e899c0'],
+      ['#d0f4de','#b8e6c8'],
+    ];
+
+    function popHeart(e, heart, color) {
+      e.stopPropagation();
+      if (heart.classList.contains('heart-pop')) return;
+
+      const rect = heart.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+
+      // Pop the heart
+      heart.style.animationPlayState = 'paused';
+      heart.classList.add('heart-pop');
+      setTimeout(() => heart.remove(), 300);
+
+      // Burst particles
+      for (let i = 0; i < 8; i++) {
+        const p = document.createElement('div');
+        p.classList.add('pop-particle');
+        const px = document.createElement('div');
+        px.classList.add('px');
+        px.style.background = color;
+        const size = 4 + Math.floor(Math.random() * 3) * 2;
+        px.style.width = size + 'px';
+        px.style.height = size + 'px';
+        p.appendChild(px);
+
+        const angle = (Math.PI * 2 / 8) * i + (Math.random() - 0.5) * 0.5;
+        const dist = 20 + Math.random() * 30;
+        p.style.left = cx + 'px';
+        p.style.top = cy + 'px';
+        p.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+        p.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 600);
+      }
+    }
+
+    function spawnHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('pixel-heart-float');
+      const colors = heartColors[Math.floor(Math.random() * heartColors.length)];
+      const size = 2 + Math.floor(Math.random() * 4);
+      heart.appendChild(createPixelHeartCanvas(size, colors[0], colors[1]));
+      heart.style.left = Math.random() * 100 + '%';
+      heart.style.animationDuration = (7 + Math.random() * 8) + 's';
+
+      // Make clickable
+      heart.addEventListener('click', (e) => popHeart(e, heart, colors[0]));
+      heart.addEventListener('touchstart', (e) => { e.preventDefault(); popHeart(e, heart, colors[0]); }, { passive: false });
+
+      heartsBg.appendChild(heart);
+      setTimeout(() => heart.remove(), 16000);
+    }
+
+    setInterval(spawnHeart, 500);
+    for (let i = 0; i < 12; i++) setTimeout(spawnHeart, i * 250);
+
+    // --- Pixel clouds ---
+    function createCloud(top, speed) {
+      const cloud = document.createElement('div');
+      cloud.classList.add('cloud');
+      cloud.style.top = top + 'px';
+      cloud.style.animationDuration = speed + 's';
+      cloud.style.animationDelay = -Math.random() * speed + 's';
+
+      // Simple pixel cloud shape
+      const rows = [
+        [0,0,1,1,1,0,0],
+        [0,1,1,1,1,1,0],
+        [1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1],
+        [0,1,1,1,1,1,0],
+      ];
+
+      const grid = document.createElement('div');
+      grid.classList.add('cloud-shape');
+      grid.style.setProperty('--cols', 7);
+      rows.forEach(row => {
+        row.forEach(v => {
+          const px = document.createElement('div');
+          if (v) {
+            px.classList.add('px');
+            px.style.background = 'rgba(255,255,255,0.7)';
+          } else {
+            px.style.width = '8px';
+            px.style.height = '8px';
+          }
+          grid.appendChild(px);
+        });
+      });
+
+      cloud.appendChild(grid);
+      document.body.appendChild(cloud);
+    }
+
+    createCloud(30, 45);
+    createCloud(80, 55);
+    createCloud(50, 38);
+
+    // --- Pixel stars ---
+    for (let i = 0; i < 20; i++) {
+      const star = document.createElement('div');
+      star.classList.add('pixel-star', 'twinkle');
+      star.style.left = Math.random() * 100 + 'vw';
+      star.style.top = Math.random() * 50 + 'vh';
+      star.style.animationDelay = Math.random() * 3 + 's';
+
+      const px = document.createElement('div');
+      px.classList.add('px');
+      const starColors = ['#ffccdd', '#cdb4db', '#bde0fe', '#fcf6bd', '#e4c1f9'];
+      px.style.background = starColors[Math.floor(Math.random() * starColors.length)];
+      star.appendChild(px);
+      document.body.appendChild(star);
+    }
+
+    // --- Pixel flowers on ground ---
+    const flowersEl = document.getElementById('flowers');
+    const flowerPatterns = [
+      { petals: '#ffb3c6', center: '#fcf6bd' },
+      { petals: '#cdb4db', center: '#ffc8dd' },
+      { petals: '#bde0fe', center: '#fcf6bd' },
+      { petals: '#d0f4de', center: '#ffc8dd' },
+      { petals: '#e4c1f9', center: '#fcf6bd' },
+    ];
+
+    for (let i = 0; i < 15; i++) {
+      const flower = document.createElement('div');
+      flower.classList.add('pixel-flower');
+      flower.style.left = (Math.random() * 95 + 2) + '%';
+      flower.style.animationDelay = Math.random() * 3 + 's';
+
+      const pattern = flowerPatterns[Math.floor(Math.random() * flowerPatterns.length)];
+      const canvas = document.createElement('canvas');
+      canvas.width = 20;
+      canvas.height = 28;
+      canvas.style.imageRendering = 'pixelated';
+      canvas.style.width = '20px';
+      canvas.style.height = '28px';
+      const ctx = canvas.getContext('2d');
+
+      // Stem
+      ctx.fillStyle = '#90c890';
+      ctx.fillRect(8, 12, 4, 16);
+
+      // Leaf
+      if (Math.random() > 0.5) {
+        ctx.fillStyle = '#a8d8a8';
+        ctx.fillRect(12, 18, 4, 4);
+      }
+
+      // Petals
+      ctx.fillStyle = pattern.petals;
+      ctx.fillRect(4, 0, 4, 4);
+      ctx.fillRect(12, 0, 4, 4);
+      ctx.fillRect(0, 4, 4, 4);
+      ctx.fillRect(16, 4, 4, 4);
+      ctx.fillRect(4, 8, 4, 4);
+      ctx.fillRect(12, 8, 4, 4);
+
+      // Center
+      ctx.fillStyle = pattern.center;
+      ctx.fillRect(4, 4, 4, 4);
+      ctx.fillRect(8, 0, 4, 4);
+      ctx.fillRect(8, 4, 4, 4);
+      ctx.fillRect(8, 8, 4, 4);
+      ctx.fillRect(12, 4, 4, 4);
+
+      flower.appendChild(canvas);
+      flowersEl.appendChild(flower);
+    }
+
+    // --- Envelope open ---
+    function openEnvelope() {
+      const env = document.getElementById('envelopeScreen');
+      env.style.transition = 'all 0.4s steps(6)';
+      env.style.transform = 'scale(1.2) translateY(-20px)';
+      env.style.opacity = '0';
+      setTimeout(() => {
+        env.classList.add('hidden');
+        document.getElementById('card').classList.remove('hidden');
+      }, 400);
+    }
+
+    // --- No button runs away ---
+    let noShrink = 1;
+    const noPhrases = ["No", "Really?", "Sure? :(", "Pls...", ":(((", "...", ""];
+    let noIndex = 0;
+
+    function runAway() {
+      const btn = document.getElementById('noBtn');
+      const card = document.getElementById('card');
+      const cardRect = card.getBoundingClientRect();
+
+      noShrink *= 0.78;
+      btn.style.transform = `scale(${noShrink})`;
+
+      noIndex = Math.min(noIndex + 1, noPhrases.length - 1);
+      btn.textContent = noPhrases[noIndex];
+
+      const maxX = cardRect.width / 2 - 50;
+      const maxY = 60;
+      const rx = (Math.random() - 0.5) * maxX * 2;
+      const ry = (Math.random() - 0.5) * maxY * 2;
+      btn.style.position = 'relative';
+      btn.style.left = rx + 'px';
+      btn.style.top = ry + 'px';
+
+      // Grow yes button
+      const yesBtn = document.querySelector('.btn-yes');
+      const currentSize = parseFloat(yesBtn.style.fontSize) || 0.8;
+      yesBtn.style.fontSize = (currentSize + 0.08) + 'rem';
+      yesBtn.style.padding = `${12 + noIndex * 2}px ${32 + noIndex * 5}px`;
+
+      if (noShrink < 0.25) {
+        btn.style.opacity = '0';
+        btn.style.pointerEvents = 'none';
+      }
+    }
+
+    // --- Yes! ---
+    function sayYes() {
+      for (let i = 0; i < 30; i++) {
+        setTimeout(() => createPixelSparkle(), i * 60);
+      }
+
+      const card = document.getElementById('card');
+      card.style.transition = 'all 0.4s steps(6)';
+      card.style.transform = 'scale(0.8)';
+      card.style.opacity = '0';
+
+      setTimeout(() => {
+        card.classList.add('hidden');
+        document.getElementById('yesScreen').classList.remove('hidden');
+        document.getElementById('yesScreen').style.display = 'block';
+        animateLoveText("Yay!");
+        animateLoveSub();
+        launchPixelConfetti();
+
+        // Shift to warmer pastel bg
+        document.querySelector('.sky-bg').style.transition = 'background 2s ease';
+        document.querySelector('.sky-bg').style.background =
+          'linear-gradient(180deg, #e4c1f9 0%, #ffc8dd 30%, #ffafcc 60%, #ffb3c6 100%)';
+      }, 500);
+    }
+
+    // --- Letter-by-letter ---
+    function animateLoveText(text) {
+      const container = document.getElementById('loveText');
+      container.innerHTML = '';
+      [...text].forEach((char, i) => {
+        const span = document.createElement('span');
+        span.classList.add('letter');
+        span.textContent = char === ' ' ? '\u00A0' : char;
+        span.style.animationDelay = (i * 0.08) + 's';
+        container.appendChild(span);
+      });
+    }
+
+    function animateLoveSub() {
+      const sub = document.getElementById('loveSub');
+      const lines = [
+        "I got you a little something",
+        "for your favorite matcha spot.",
+        "I hope you think of me",
+        "while enjoying your drinky.",
+        "",
+        "Card code: 7783 3288 3538 7708"
+      ];
+      sub.innerHTML = '';
+      let totalDelay = 0.5;
+      lines.forEach((line, li) => {
+        const lineDiv = document.createElement('div');
+        lineDiv.style.marginTop = li === 5 ? '16px' : '0';
+        if (line === '') { sub.appendChild(lineDiv); return; }
+        [...line].forEach((char, ci) => {
+          const span = document.createElement('span');
+          span.classList.add('letter');
+          span.textContent = char === ' ' ? '\u00A0' : char;
+          span.style.animationDelay = totalDelay + (ci * 0.02) + 's';
+          lineDiv.appendChild(span);
+        });
+        totalDelay += line.length * 0.02 + 0.15;
+        sub.appendChild(lineDiv);
+      });
+    }
+
+    // --- Pixel sparkle particles ---
+    function createPixelSparkle() {
+      const sparkle = document.createElement('div');
+      sparkle.classList.add('sparkle');
+
+      const grid = document.createElement('div');
+      grid.classList.add('sparkle-shape');
+
+      const color = pastelColors[Math.floor(Math.random() * pastelColors.length)];
+      const pattern = [
+        [0,1,0],
+        [1,1,1],
+        [0,1,0],
+      ];
+
+      pattern.forEach(row => {
+        row.forEach(v => {
+          const px = document.createElement('div');
+          px.classList.add('px');
+          px.style.background = v ? color : 'transparent';
+          grid.appendChild(px);
+        });
+      });
+
+      sparkle.appendChild(grid);
+      sparkle.style.left = (20 + Math.random() * 60) + 'vw';
+      sparkle.style.top = (15 + Math.random() * 50) + 'vh';
+      document.body.appendChild(sparkle);
+      setTimeout(() => sparkle.remove(), 800);
+    }
+
+    // --- Pixel confetti blocks ---
+    function launchPixelConfetti() {
+      for (let i = 0; i < 80; i++) {
+        setTimeout(() => {
+          const c = document.createElement('div');
+          c.classList.add('confetti');
+          const block = document.createElement('div');
+          block.classList.add('confetti-block');
+          block.style.background = pastelColors[Math.floor(Math.random() * pastelColors.length)];
+          const size = 4 + Math.floor(Math.random() * 3) * 4;
+          block.style.width = size + 'px';
+          block.style.height = size + 'px';
+          c.appendChild(block);
+          c.style.left = Math.random() * 100 + 'vw';
+          c.style.animationDuration = (2 + Math.random() * 3) + 's';
+          document.body.appendChild(c);
+          setTimeout(() => c.remove(), 5000);
+        }, i * 60);
+      }
+
+      // Keep confetti going
+      setInterval(() => {
+        for (let i = 0; i < 6; i++) {
+          const c = document.createElement('div');
+          c.classList.add('confetti');
+          const block = document.createElement('div');
+          block.classList.add('confetti-block');
+          block.style.background = pastelColors[Math.floor(Math.random() * pastelColors.length)];
+          const size = 4 + Math.floor(Math.random() * 3) * 4;
+          block.style.width = size + 'px';
+          block.style.height = size + 'px';
+          c.appendChild(block);
+          c.style.left = Math.random() * 100 + 'vw';
+          c.style.animationDuration = (2 + Math.random() * 3) + 's';
+          document.body.appendChild(c);
+          setTimeout(() => c.remove(), 5000);
+        }
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
