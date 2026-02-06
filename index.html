@@ -180,7 +180,7 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 80px;
+      height: 120px;
       z-index: 3;
       overflow: hidden;
     }
@@ -198,14 +198,14 @@
 
     .ground .dirt {
       width: 100%;
-      height: 64px;
+      height: 104px;
       background: repeating-linear-gradient(90deg, #d4a76a 0px, #d4a76a 8px, #c89b60 8px, #c89b60 16px);
     }
 
     /* Pixel flowers on ground */
     .flowers {
       position: fixed;
-      bottom: 64px;
+      bottom: 104px;
       left: 0;
       width: 100%;
       height: 32px;
@@ -531,6 +531,9 @@
       text-align: center;
       cursor: pointer;
       animation: cardEntrance 0.6s steps(8);
+      width: 90%;
+      max-width: 520px;
+      margin: 0 auto;
     }
 
     .envelope-pixel {
@@ -570,6 +573,7 @@
       margin-top: 24px;
       animation: blink 1s steps(2) infinite;
       text-shadow: 1px 1px 0 #f5c6d8;
+      line-height: 1.6;
     }
 
     @keyframes blink {
@@ -599,6 +603,37 @@
     @keyframes arrowBob {
       0% { transform: translateY(0); }
       100% { transform: translateY(8px); }
+    }
+
+    /* Mobile responsive fixes */
+    @media (max-width: 768px) {
+      .envelope-screen {
+        width: 85%;
+        padding: 0 20px;
+      }
+
+      .envelope-pixel {
+        display: flex;
+        justify-content: center;
+      }
+
+      .tap-text {
+        font-size: 0.6rem;
+        line-height: 1.8;
+        padding: 0 10px;
+      }
+
+      .title {
+        font-size: 0.9rem;
+      }
+
+      .subtitle {
+        font-size: 0.5rem;
+      }
+
+      .question {
+        font-size: 0.7rem;
+      }
     }
   </style>
 </head>
