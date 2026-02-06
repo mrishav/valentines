@@ -1042,15 +1042,12 @@
         "I got you a little something",
         "for your favorite matcha spot.",
         "I hope you think of me",
-        "while enjoying your drinky.",
-        "",
-        "Card code: 7783 3288 3538 7708"
+        "while enjoying your drinky."
       ];
       sub.innerHTML = '';
       let totalDelay = 0.5;
       lines.forEach((line, li) => {
         const lineDiv = document.createElement('div');
-        lineDiv.style.marginTop = li === 5 ? '16px' : '0';
         if (line === '') { sub.appendChild(lineDiv); return; }
         [...line].forEach((char, ci) => {
           const span = document.createElement('span');
