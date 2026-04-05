@@ -14,8 +14,5 @@ An interactive pixel-art Valentine's Day card built with pure HTML, CSS, and van
 - CSS
 - Vanilla JavaScript
 
-## Live
-https://mrishav.github.io/valentines/
-
 ## Author
 Rishav Mitra
